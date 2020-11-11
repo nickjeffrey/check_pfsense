@@ -111,11 +111,10 @@ Add the following sections to the /etc/nagios/services.cfg file (or wherever you
         
     # confirm SSH daemon is listening
     define service{
-        use                            generic-14x7-service
+        use                            generic-24x7-service
         hostgroup_name                 all_ssh_servers,all_linux,all_supermicro_ipmi,all_vcenter
         service_description            SSH
         check_command                  check_ssh
-        notification_period            14x7
         }
 
 
