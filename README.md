@@ -3,6 +3,8 @@ nagios check for pfSense using SNMP
 
 This readme describes how to monitor pfSense over SNMP.  It is assumed that you are using nagios for monitoring.
 
+It is assumed that you have already enabled SNMP on the pfSense device by clicking Services, SNMP, Enable.  Remember to only bind the SNMP daemon to the LAN interface.
+<img src=images/snmp.png>
 
 It is assumed you already have the nagios plugins `check_snmp` and `check_http` and `check_ssh` from the nagios-plugins package that shipped with your distro.
 
