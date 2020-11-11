@@ -4,7 +4,7 @@ nagios check for pfSense using SNMP
 This readme describes how to monitor pfSense over SNMP.  It is assumed that you are using nagios for monitoring.
 
 
-It is assumed you already have the nagios plugins `check_snmp` and `check_http` from the nagios-plugins package that shipped with your distro.
+It is assumed you already have the nagios plugins `check_snmp` and `check_http` and `check_ssh` from the nagios-plugins package that shipped with your distro.
 
 It is assumed you already have the nagios plugin `check_snmp_storage` from http://nagios.manubulon.com
 
@@ -102,6 +102,16 @@ Add the following sections to the /etc/nagios/services.cfg file (or wherever you
         service_description             http
         check_command                   check_http
         }
+        
+    # confirm SSH daemon is listening
+    define service{
+        use                            generic-14x7-service
+        hostgroup_name                 all_ssh_servers,all_linux,all_supermicro_ipmi,all_vcenter
+        service_description            SSH
+        check_command                  check_ssh
+        notification_period            14x7
+        }
+
 
 
 The Nagios web interface will look similar to the following:
