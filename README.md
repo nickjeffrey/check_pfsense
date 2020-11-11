@@ -4,7 +4,7 @@ nagios check for pfSense using SNMP
 This readme describes how to monitor pfSense over SNMP.  It is assumed that you are using nagios for monitoring.
 
 
-It is assumed you already have the nagios plugin `check_snmp`  (part of nagios-plugins package for most distros)
+It is assumed you already have the nagios plugins `check_snmp` and `check_http` from the nagios-plugins package that shipped with your distro.
 
 It is assumed you already have the nagios plugin `check_snmp_storage` from http://nagios.manubulon.com
 
@@ -31,7 +31,7 @@ Add the following sections to the /etc/nagios/services.cfg file (or wherever you
     ## The OID 1.3.6.1.4.1.2021.10.1.5.3 shows 15 minute average for %cpu util
     ## The syntax is: !snmp_community!oid!warn!critical
     define service{
-       use                             generic-14x7-service
+       use                             generic-24x7-service
         hostgroup_name                 all_pfsense_routers
         service_description            cpu load
         notification_period            14x7
@@ -45,7 +45,7 @@ Add the following sections to the /etc/nagios/services.cfg file (or wherever you
     # You can find the name of the swap space by looking in /dev/label/ from an SSH login
     # Or by clicking Diagnostics, Command prompt, ls -l /dev/label
     define service {
-        use                             generic-14x7-service
+        use                             generic-24x7-service
         hostgroup_name                  all_pfsense_routers
         service_description             swap
         check_command                   check_snmp_storage!public!/dev/label/swap0!50!75
@@ -56,7 +56,7 @@ Add the following sections to the /etc/nagios/services.cfg file (or wherever you
     # pfSense only has the root filesystem and swap space, but no other filesystems
     # You can figure out the name of the local disk clicking Diagnostics, Command prompt, ls -l /dev/ufsid
     define service {
-        use                             generic-14x7-service
+        use                             generic-24x7-service
         hostgroup_name                  all_pfsense_routers
         service_description             disk space
         check_command                   check_snmp_storage!public!/dev/ufsid/587f4636bdb209d5!90!95
@@ -67,7 +67,7 @@ Add the following sections to the /etc/nagios/services.cfg file (or wherever you
     #   snmpwalk -v 1 -c public routername 1.3.6.1.2.1.2.2.1.2    <---- shows the interface names:
     #   snmpwalk -v 1 -c public routername 1.3.6.1.2.1.2.2.1.8    <---- shows the interface operational status
     define service {
-        use                             generic-14x7-service
+        use                             generic-24x7-service
         hostgroup_name                  all_pfsense_routers
         service_description             WAN up
         check_command                   check_snmp!public!1.3.6.1.2.1.2.2.1.8.5!1!1
@@ -78,7 +78,7 @@ Add the following sections to the /etc/nagios/services.cfg file (or wherever you
     #   snmpwalk -v 1 -c public routername 1.3.6.1.2.1.2.2.1.2    <---- shows the interface names:
     #   snmpwalk -v 1 -c public routername 1.3.6.1.2.1.2.2.1.8    <---- shows the interface operational status
     define service {
-        use                             generic-14x7-service
+        use                             generic-24x7-service
         hostgroup_name                  all_pfsense_routers
         service_description             DMZ up
         check_command                   check_snmp!public!1.3.6.1.2.1.2.2.1.8.6!1!1
@@ -89,10 +89,18 @@ Add the following sections to the /etc/nagios/services.cfg file (or wherever you
     #   snmpwalk -v 1 -c public routername 1.3.6.1.2.1.2.2.1.2    <---- shows the interface names:
     #   snmpwalk -v 1 -c public routername 1.3.6.1.2.1.2.2.1.8    <---- shows the interface operational status
     define service {
-        use                             generic-14x7-service
+        use                             generic-24x7-service
         hostgroup_name                  all_pfsense_routers
         service_description             LAN up
         check_command                   check_snmp!public!1.3.6.1.2.1.2.2.1.8.7!1!1
+        }
+
+    # Define a service to check web interface
+    define service{
+        use                             generic-24x7-service
+        hostgroup_name                  all_pfsense_routers
+        service_description             http
+        check_command                   check_http
         }
 
 
