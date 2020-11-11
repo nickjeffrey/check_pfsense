@@ -3,6 +3,25 @@ nagios check for pfSense using SNMP
 
 This readme describes how to monitor pfSense over SNMP.  It is assumed that you are using nagios for monitoring.
 
+
+It is assumed you already have the nagios plugin `check_snmp`  (part of nagios-plugins package for most distros)
+
+It is assumed you already have the nagios plugin `check_snmp_storage` from http://nagios.manubulon.com
+
+Ensure the following sections exist in /etc/nagios/commands.cfg (or wherever your distro puts commands.cfg)
+    # 'check_snmp' command definition
+    define command{
+        command_name    check_snmp
+        command_line    $USER1$/check_snmp -H $HOSTADDRESS$ -C $ARG1$ -o $ARG2$ -w $ARG3$ -c $ARG4$
+        }
+
+    # 'check_snmp_storage' command definition
+    define command{
+        command_name    check_snmp_storage
+        command_line    $USER1$/check_snmp_storage -H $HOSTADDRESS$ -C $ARG1$ -m $ARG2$ -w $ARG3$ -c $ARG4$
+        }
+
+
 Add the following sections to the /etc/nagios/services.cfg file (or wherever your distro puts services.cfg)
 
     # check pfSense CPU
@@ -21,6 +40,7 @@ Add the following sections to the /etc/nagios/services.cfg file (or wherever you
 
 
     # check pfSense swap space
+    # This depends on the check_snmp_storage script
     # You can find the name of the swap space by looking in /dev/label/ from an SSH login
     # Or by clicking Diagnostics, Command prompt, ls -l /dev/label
     define service {
@@ -31,6 +51,7 @@ Add the following sections to the /etc/nagios/services.cfg file (or wherever you
         }
 
     # check pfSense / filesystem space
+    # This depends on the check_snmp_storage script
     # pfSense only has the root filesystem and swap space, but no other filesystems
     # You can figure out the name of the local disk clicking Diagnostics, Command prompt, ls -l /dev/ufsid
     define service {
@@ -66,7 +87,7 @@ Add the following sections to the /etc/nagios/services.cfg file (or wherever you
     # figure out which interface is which with these commands:
     #   snmpwalk -v 1 -c public routername 1.3.6.1.2.1.2.2.1.2    <---- shows the interface names:
     #   snmpwalk -v 1 -c public routername 1.3.6.1.2.1.2.2.1.8    <---- shows the interface operational status
-define service {
+    define service {
         use                             generic-14x7-service
         hostgroup_name                  all_pfsense_routers
         service_description             LAN up
