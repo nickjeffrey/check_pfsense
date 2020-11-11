@@ -18,6 +18,12 @@ Ensure the following sections exist in /etc/nagios/commands.cfg (or wherever you
         command_line    $USER1$/check_snmp -H $HOSTADDRESS$ -C $ARG1$ -o $ARG2$ -w $ARG3$ -c $ARG4$
         }
         
+    # 'check_http' command definition
+    define command{
+        command_name    check_http
+        command_line    $USER1$/check_http -I $HOSTADDRESS$ $ARG1$
+        }
+
     # 'check_ssh' command definition
     define command{
         command_name    check_ssh
