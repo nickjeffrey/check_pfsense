@@ -9,6 +9,7 @@ It is assumed you already have the nagios plugin `check_snmp`  (part of nagios-p
 It is assumed you already have the nagios plugin `check_snmp_storage` from http://nagios.manubulon.com
 
 Ensure the following sections exist in /etc/nagios/commands.cfg (or wherever your distro puts commands.cfg)
+
     # 'check_snmp' command definition
     define command{
         command_name    check_snmp
